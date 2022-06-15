@@ -6,13 +6,26 @@ from fastapi.responses import RedirectResponse
 from starlette.requests import Request
 import requests
 import base64
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 bot = PrawBot()
 parser = Parser()
 
+origins = [
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/subreddit/{sub_name}")
-def read_root(sub_name: str):
+async def read_root(sub_name: str):
     return json.dumps(parser.parse(sub_name, bot.pull(sub_name)))
 
 @app.get("/spotify/login")
