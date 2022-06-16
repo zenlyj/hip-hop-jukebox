@@ -1,16 +1,24 @@
-from prawbot import PrawBot
-from parser import Parser
-import json
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
+from sql_app.database import SessionLocal, engine
 from fastapi.responses import RedirectResponse
 from starlette.requests import Request
 import requests
 import base64
 from fastapi.middleware.cors import CORSMiddleware
+from sql_app import crud, models, schemas
+from typing import List
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-bot = PrawBot()
-parser = Parser()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 origins = [
     "http://localhost:3000"
@@ -23,10 +31,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.get("/subreddit/{sub_name}")
-async def read_root(sub_name: str):
-    return json.dumps(parser.parse(sub_name, bot.pull(sub_name)))
 
 @app.get("/spotify/login")
 def login_spotify():
@@ -64,3 +68,11 @@ def search_spotify(token: str, query: str, query_type: str):
         'Authorization' : 'Bearer ' + token
     }
     return requests.get(url, headers=headers, params=params).text
+
+@app.get("/songs/", response_model=List[schemas.Song])
+def get_songs(db: Session = Depends(get_db)):
+    return crud.get_songs(db)
+
+@app.post("/songs/", response_model=schemas.Song)
+def add_songs(song: schemas.SongCreate, db: Session = Depends(get_db)):
+    return crud.create_song(db, song)
