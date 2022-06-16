@@ -55,8 +55,8 @@ def authorize_spotify(request: Request) -> None:
     }
     return requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data).text
 
-@app.get("/spotify/search/{token}/{query}/{query_type}")
-def search_spotify(token: str, query: str, query_type: str):
+@app.get("/spotify/search/")
+def search_spotify(query: str, query_type: str, token: str):
     url = 'https://api.spotify.com/v1/search'
     params = {
         'q' : query,
