@@ -24,3 +24,4 @@ frontend/yarn-error.log*
 
 __pycache__/
 sql_app/__pycache__/
+hiphop_jukebox_app.db
