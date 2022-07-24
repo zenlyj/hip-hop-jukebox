@@ -1,56 +1,48 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SpotifyPlayer from 'react-spotify-web-playback';
 import { Button, Grid } from '@mui/material';
 import MusicList from './MusicList'
 
-class Home extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-          jukebox: [],
-          playlist: [],
-          playlistURI: [],
-          isPlaying: false,
-        }
-        this.jukeBoxToPlaylist = this.jukeBoxToPlaylist.bind(this)
-        this.playListToJukeBox = this.playListToJukeBox.bind(this)
-        this.loadSongs = this.loadSongs.bind(this)
-    }
+function Home(props) {
+    const [jukebox, setJukebox] = useState([])
+    const [playlist, setPlaylist] = useState([])
+    const [playlistURI, setPlaylistURI] = useState([])
+    const [isPlaying, setIsPlaying] = useState(false)
 
-    componentDidMount() {
-        Promise.resolve(fetch('http://localhost:8000/songs/'))
-            .then(value => Promise.resolve(value.json())
-                .then(value => this.setState({jukebox: value}))
-            )
+    useEffect(() => {
+        if (jukebox.length === 0) {
+            Promise.resolve(fetch('http://localhost:8000/songs/'))
+                .then(value => Promise.resolve(value.json())
+                    .then(value => setJukebox(value))
+                )
+        }
         const windowURL = window.location.search
         const params = new URLSearchParams(windowURL)
-        Promise.resolve(fetch('http://localhost:8000/spotify/authorize?authorization_code='+params.get('code')))
+        if (sessionStorage.getItem('access_token') === null) {
+            Promise.resolve(fetch('http://localhost:8000/spotify/authorize?authorization_code='+params.get('code')))
             .then(value => Promise.resolve(value.json())
                 .then(value => {
-                    if (sessionStorage.getItem('access_token') === null) {
-                        const access_token = JSON.parse(value).access_token
-                        sessionStorage.setItem('access_token', access_token)
-                    }
+                    const access_token = JSON.parse(value).access_token
+                    console.log(access_token)
+                    sessionStorage.setItem('access_token', access_token)
                 })
-            )
-    }
-
-    componentDidUpdate() {
-        if (this.state.playlistURI.length > 0 && this.state.playlistURI.length === this.state.playlist.length && !this.state.isPlaying) {
-            this.setState({isPlaying: true})
+            )            
         }
-    }
+        if (playlistURI.length > 0 && playlistURI.length === playlist.length && !isPlaying) {
+            setIsPlaying(true)
+        }                
+    })
 
-    loadSongs() {
-        for (let i = 0; i < this.state.playlist.length; i++) {
-            const song = this.state.playlist[i]
+    const loadSongs = () => {
+        for (let i = 0; i < playlist.length; i++) {
+            const song = playlist[i]
             const query = song.title + ' ' + song.artist
             const queryType = 'track'
-            this.getSongURI(query, queryType, sessionStorage.getItem('access_token'))
-        }
+            getSongURI(query, queryType, sessionStorage.getItem('access_token'))
+        }        
     }
 
-    getSongURI(query, queryType, token, toPlay) {
+    const getSongURI = (query, queryType, token) => {
         let url = 'https://api.spotify.com/v1/search?'
         const params = new URLSearchParams({
             q: query,
@@ -66,68 +58,60 @@ class Home extends React.Component {
             }
         })).then(value => Promise.resolve(value.json())
                 .then(value => {
-                    const uris = this.state.playlistURI
+                    const uris = playlistURI
                     uris.push(value.tracks.items[0].uri)
-                    this.setState({playlistURI: uris})
+                    setPlaylistURI(uris)
                 })
-        )
+        )        
     }
 
-    getIndex(songs, songId) {
+    const getIndex = (songs, songId) => {
         for (let i = 0; i < songs.length; i++) {
-          if (songs[i].id == songId) {
-            return i
-          }
-        }
-    }    
-
-    jukeBoxToPlaylist(songId) {
-        const idx = this.getIndex(this.state.jukebox, songId)
-        const song = this.state.jukebox[idx]
-        const updatedJukebox = this.state.jukebox
-        updatedJukebox.splice(idx, 1)
-        const updatedPlaylist = this.state.playlist
-        updatedPlaylist.push(song)
-        this.setState({
-          jukebox : updatedJukebox,
-          playlist : updatedPlaylist
-        })
-      }
-    
-    playListToJukeBox(songId) {
-        const idx = this.getIndex(this.state.playlist, songId)
-        const song = this.state.playlist[idx]
-        const updatedPlaylist = this.state.playlist
-        updatedPlaylist.splice(idx, 1)
-        const updatedJukebox = this.state.jukebox
-        updatedJukebox.push(song)
-        this.setState({
-          jukebox : updatedJukebox,
-          playlist : updatedPlaylist
-        })
-    }
-    
-    render() {
-        const token = sessionStorage.getItem('access_token')
-        console.log(this.state.playlistURI)
-        return (
-          <Grid container spacing={5}>
-            <Grid item xs={6}>
-              <MusicList songs={this.state.jukebox} onClickHandler={this.jukeBoxToPlaylist}/>
-            </Grid>
-            <Grid item xs={6}>
-              <MusicList songs={this.state.playlist} onClickHandler={this.playListToJukeBox}/>
-            </Grid>
-            {   token !== null && this.state.isPlaying ?
-                    <SpotifyPlayer 
-                        token={token}
-                        uris={this.state.playlistURI}
-                    />
-                : <Button onClick={() => this.loadSongs()}> Play Songs </Button>
+            if (songs[i].id == songId) {
+              return i
             }
-          </Grid>
-        );
+          }        
     }
+
+    const jukeBoxToPlaylist = (songId) => {
+        const idx = getIndex(jukebox, songId)
+        const song = jukebox[idx]
+        const updatedJukebox = jukebox.slice()
+        updatedJukebox.splice(idx, 1)
+        const updatedPlaylist = playlist
+        updatedPlaylist.push(song)
+        setJukebox(updatedJukebox)
+        setPlaylist(updatedPlaylist)
+    }
+
+    const playListToJukeBox = (songId) => {
+        const idx = getIndex(playlist, songId)
+        const song = playlist[idx]
+        const updatedPlaylist = playlist.slice()
+        updatedPlaylist.splice(idx, 1)
+        const updatedJukebox = jukebox
+        updatedJukebox.push(song)
+        setJukebox(updatedJukebox)
+        setPlaylist(updatedPlaylist)
+    }
+    
+    return (
+        <Grid container spacing={5}>
+            <Grid item xs={6}>
+            <MusicList songs={jukebox} onClickHandler={jukeBoxToPlaylist}/>
+            </Grid>
+            <Grid item xs={6}>
+            <MusicList songs={playlist} onClickHandler={playListToJukeBox}/>
+            </Grid>
+            {   sessionStorage.getItem('access_token') !== null && isPlaying ?
+                    <SpotifyPlayer 
+                        token={sessionStorage.getItem('access_token')}
+                        uris={playlistURI}
+                    />
+                : <Button onClick={() => loadSongs()}> Play Songs </Button>
+            }
+      </Grid>
+    )
 }
 
 export default Home
