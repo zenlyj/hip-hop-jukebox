@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SpotifyPlayer from 'react-spotify-web-playback';
 import { Button, Grid } from '@mui/material';
-import MusicList from './MusicList'
+import Jukebox from './Jukebox'
 
 function Home(props) {
     const [jukebox, setJukebox] = useState([])
@@ -10,12 +10,6 @@ function Home(props) {
     const [isPlaying, setIsPlaying] = useState(false)
 
     useEffect(() => {
-        if (jukebox.length === 0) {
-            Promise.resolve(fetch('http://localhost:8000/songs/'))
-                .then(value => Promise.resolve(value.json())
-                    .then(value => setJukebox(value))
-                )
-        }
         const windowURL = window.location.search
         const params = new URLSearchParams(windowURL)
         if (sessionStorage.getItem('access_token') === null) {
@@ -98,10 +92,10 @@ function Home(props) {
     return (
         <Grid container spacing={5}>
             <Grid item xs={6}>
-            <MusicList songs={jukebox} onClickHandler={jukeBoxToPlaylist}/>
+            <Jukebox onClickHandler={jukeBoxToPlaylist}/>
             </Grid>
             <Grid item xs={6}>
-            <MusicList songs={playlist} onClickHandler={playListToJukeBox}/>
+            {/* <MusicList songs={playlist} onClickHandler={playListToJukeBox}/> */}
             </Grid>
             {   sessionStorage.getItem('access_token') !== null && isPlaying ?
                     <SpotifyPlayer 
