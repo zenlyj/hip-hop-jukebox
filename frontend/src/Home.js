@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SpotifyPlayer from 'react-spotify-web-playback';
 import { Button, Grid } from '@mui/material';
 import Jukebox from './Jukebox'
+import Playlist from './Playlist'
 
 function Home(props) {
     const [jukebox, setJukebox] = useState([])
@@ -12,8 +13,10 @@ function Home(props) {
     useEffect(() => {
         const windowURL = window.location.search
         const params = new URLSearchParams(windowURL)
-        if (sessionStorage.getItem('access_token') === null) {
-            Promise.resolve(fetch('http://localhost:8000/spotify/authorize?authorization_code='+params.get('code')))
+        const authCode = params.get('code')
+        console.log(sessionStorage.getItem('access_token'))
+        if (sessionStorage.getItem('access_token') === null && authCode !== null) {
+            Promise.resolve(fetch('http://localhost:8000/spotify/authorize?authorization_code='+authCode))
             .then(value => Promise.resolve(value.json())
                 .then(value => {
                     const access_token = JSON.parse(value).access_token
@@ -28,6 +31,7 @@ function Home(props) {
     })
 
     const loadSongs = () => {
+        console.log(sessionStorage.getItem('access_token'))
         for (let i = 0; i < playlist.length; i++) {
             const song = playlist[i]
             const query = song.title + ' ' + song.artist
@@ -95,7 +99,7 @@ function Home(props) {
             <Jukebox onClickHandler={jukeBoxToPlaylist}/>
             </Grid>
             <Grid item xs={6}>
-            {/* <MusicList songs={playlist} onClickHandler={playListToJukeBox}/> */}
+            <Playlist songs={[]} onClickHandler={playListToJukeBox}/>
             </Grid>
             {   sessionStorage.getItem('access_token') !== null && isPlaying ?
                     <SpotifyPlayer 
