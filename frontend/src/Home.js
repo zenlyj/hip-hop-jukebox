@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SpotifyPlayer from 'react-spotify-web-playback';
 import { Button, Grid } from '@mui/material';
+import AppHeader from './AppHeader';
 import Jukebox from './Jukebox'
 import Playlist from './Playlist'
 
@@ -95,6 +96,9 @@ function Home(props) {
     
     return (
         <Grid container spacing={5}>
+            <Grid item xs={12}>
+                <AppHeader />
+            </Grid>
             <Grid item xs={6}>
             <Jukebox onClickHandler={jukeBoxToPlaylist}/>
             </Grid>
