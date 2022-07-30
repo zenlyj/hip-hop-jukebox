@@ -10,7 +10,7 @@ import HeadphonesIcon from '@mui/icons-material/Headphones';
 function AppHeader() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: '#191414'}}>
+      <AppBar position="static" sx={{ bgcolor: '#000000'}}>
         <Toolbar>
           <IconButton
             size="large"

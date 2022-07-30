@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Box from '@mui/material/Box'
+import ListContainer from './ListContainer'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
-import MusicList from './MusicList'
 
 function Jukebox(props) {
     const modes = ['Latest', 'All']
@@ -32,17 +31,13 @@ function Jukebox(props) {
     const listHeader = () => {
         return <ListItem disablePadding>
             <ListItemButton onClick={() => changeMode()}>
-                <ListItemText primary='Song Selection' secondary={modes[mode]} />
+                <ListItemText primary='Song Selection' secondary={modes[mode]} primaryTypographyProps={{color: '#ffffff'}} secondaryTypographyProps={{color: '#a1a1a1ff'}}/>
             </ListItemButton>
         </ListItem>
     }
 
     return (
-        <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-            <nav aria-label='main mail folders'>
-                <MusicList listHeader={listHeader()} songs={songs} onClickHandler={addToPlaylist}/>
-            </nav>
-        </Box>
+        <ListContainer listHeader={listHeader()} songs={songs} onClickHandler={addToPlaylist}/>
     )
 }
 

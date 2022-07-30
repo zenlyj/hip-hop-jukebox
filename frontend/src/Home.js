@@ -95,23 +95,25 @@ function Home(props) {
     }
     
     return (
-        <Grid container spacing={5}>
-            <Grid item xs={12}>
+        <Grid container spacing={3} sx={{bgcolor: '#141414ff'}}>
+            <Grid item xs={12} sx={{height: '8vh'}}>
                 <AppHeader />
             </Grid>
-            <Grid item xs={6}>
-            <Jukebox onClickHandler={jukeBoxToPlaylist}/>
+            <Grid item xs={6} sx={{maxHeight: '86.2vh'}}>
+                <Jukebox onClickHandler={jukeBoxToPlaylist}/>
             </Grid>
-            <Grid item xs={6}>
-            <Playlist songs={[]} onClickHandler={playListToJukeBox}/>
+            <Grid item xs={6} sx={{maxHeight: '86.2vh'}}>
+                <Playlist songs={[]} onClickHandler={playListToJukeBox}/>
             </Grid>
-            {   sessionStorage.getItem('access_token') !== null && isPlaying ?
-                    <SpotifyPlayer 
-                        token={sessionStorage.getItem('access_token')}
-                        uris={playlistURI}
-                    />
-                : <Button onClick={() => loadSongs()}> Play Songs </Button>
-            }
+            <Grid item xs={12} sx={{height: '8vh'}}>
+                {   sessionStorage.getItem('access_token') !== null && isPlaying ?
+                        <SpotifyPlayer 
+                            token={sessionStorage.getItem('access_token')}
+                            uris={playlistURI}
+                        />
+                    : <Button onClick={() => loadSongs()}> Play Songs </Button>
+                }
+            </Grid>
       </Grid>
     )
 }
