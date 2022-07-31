@@ -14,3 +14,16 @@ class Song(SongBase):
 
     class Config:
         orm_mode = True
+
+class PlaylistBase(BaseModel):
+    authentication_code: str
+    song: int
+
+class PlaylistCreate(PlaylistBase):
+    pass
+
+class Playlist(PlaylistBase):
+    id: int
+
+    class Config:
+        orm_mode = True

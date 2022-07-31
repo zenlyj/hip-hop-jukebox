@@ -11,3 +11,13 @@ def create_song(db: Session, song: schemas.SongCreate):
     db.commit()
     db.refresh(song)
     return song
+
+def get_playlist_songs(db: Session, authentication_code: str):
+    return db.query(models.Playlist).filter(models.Playlist.authentication_code == authentication_code).all()
+
+def add_song_to_playlist(db: Session, playlist: schemas.PlaylistCreate):
+    playlist_song = models.Playlist(authentication_code=playlist.authentication_code, song=playlist.song)
+    db.add(playlist_song)
+    db.commit()
+    db.refresh(playlist_song)
+    return playlist_song

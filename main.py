@@ -80,3 +80,11 @@ def get_songs(db: Session = Depends(get_db)):
 @app.post("/songs/", response_model=schemas.Song)
 def add_songs(song: schemas.SongCreate, db: Session = Depends(get_db)):
     return crud.create_song(db, song)
+
+@app.get("/playlist/", response_model=List[schemas.Playlist])
+def get_playlist_songs(authentication_code: str, db: Session = Depends(get_db)):
+    return crud.get_playlist_songs(db, authentication_code)
+
+@app.post("/playlist/", response_model=schemas.Playlist)
+def add_song_to_playlist(playlist: schemas.PlaylistCreate, db: Session = Depends(get_db)):
+    return crud.add_song_to_playlist(db, playlist)
