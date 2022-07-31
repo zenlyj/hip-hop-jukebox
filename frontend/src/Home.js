@@ -10,6 +10,7 @@ function Home(props) {
     const [playlist, setPlaylist] = useState([])
     const [playlistURI, setPlaylistURI] = useState([])
     const [isPlaying, setIsPlaying] = useState(false)
+    const [value, setValue] = useState(0)
 
     useEffect(() => {
         const windowURL = window.location.search
@@ -30,6 +31,10 @@ function Home(props) {
             setIsPlaying(true)
         }                
     })
+
+    const forceRender = () => {
+        setValue(value+1)
+    }
 
     const loadSongs = () => {
         console.log(sessionStorage.getItem('access_token'))
@@ -63,36 +68,6 @@ function Home(props) {
                 })
         )        
     }
-
-    const getIndex = (songs, songId) => {
-        for (let i = 0; i < songs.length; i++) {
-            if (songs[i].id == songId) {
-              return i
-            }
-          }        
-    }
-
-    const jukeBoxToPlaylist = (songId) => {
-        const idx = getIndex(jukebox, songId)
-        const song = jukebox[idx]
-        const updatedJukebox = jukebox.slice()
-        updatedJukebox.splice(idx, 1)
-        const updatedPlaylist = playlist
-        updatedPlaylist.push(song)
-        setJukebox(updatedJukebox)
-        setPlaylist(updatedPlaylist)
-    }
-
-    const playListToJukeBox = (songId) => {
-        const idx = getIndex(playlist, songId)
-        const song = playlist[idx]
-        const updatedPlaylist = playlist.slice()
-        updatedPlaylist.splice(idx, 1)
-        const updatedJukebox = jukebox
-        updatedJukebox.push(song)
-        setJukebox(updatedJukebox)
-        setPlaylist(updatedPlaylist)
-    }
     
     return (
         <Grid container spacing={3} sx={{bgcolor: '#141414ff'}}>
@@ -100,10 +75,10 @@ function Home(props) {
                 <AppHeader />
             </Grid>
             <Grid item xs={6} sx={{maxHeight: '86.2vh'}}>
-                <Jukebox onClickHandler={jukeBoxToPlaylist}/>
+                <Jukebox forceRender={forceRender}/>
             </Grid>
             <Grid item xs={6} sx={{maxHeight: '86.2vh'}}>
-                <Playlist songs={[]} onClickHandler={playListToJukeBox}/>
+                <Playlist />
             </Grid>
             <Grid item xs={12} sx={{height: '8vh'}}>
                 {   sessionStorage.getItem('access_token') !== null && isPlaying ?

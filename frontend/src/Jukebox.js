@@ -19,8 +19,30 @@ function Jukebox(props) {
         }
     })
 
-    const addToPlaylist = () => {
-        // To-Do: implement playlist CRUD API 
+    const addToPlaylist = (songId) => {
+        const auth_code = sessionStorage.getItem('access_token')
+        console.log(JSON.stringify({
+            authentication_code: auth_code,
+            song: songId
+        }))
+        const url = 'http://localhost:8000/playlist/'
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authentication_code: auth_code,
+                song: songId
+            })
+        })
+        .then((response) => {
+            if (response.status == 200) {
+                props.forceRender()
+            } else {
+                console.log('Failed to add to playlist')
+            }
+        })
     }
 
     const changeMode = () => {

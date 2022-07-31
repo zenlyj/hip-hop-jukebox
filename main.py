@@ -81,7 +81,7 @@ def get_songs(db: Session = Depends(get_db)):
 def add_songs(song: schemas.SongCreate, db: Session = Depends(get_db)):
     return crud.create_song(db, song)
 
-@app.get("/playlist/", response_model=List[schemas.Playlist])
+@app.get("/playlist/", response_model=List[schemas.Song])
 def get_playlist_songs(authentication_code: str, db: Session = Depends(get_db)):
     return crud.get_playlist_songs(db, authentication_code)
 
