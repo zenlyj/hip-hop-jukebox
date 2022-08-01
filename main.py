@@ -23,13 +23,9 @@ def get_db():
     finally:
         db.close()
 
-origins = [
-    "*"
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,7 +66,7 @@ def search_spotify(query: str, query_type: str, token: str):
     obj = {
         'uri' : uri
     }
-    return json.dumps(obj)
+    return obj
 
 
 @app.get("/songs/", response_model=List[schemas.Song])
