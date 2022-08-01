@@ -21,10 +21,6 @@ function Jukebox(props) {
 
     const addToPlaylist = (songId) => {
         const auth_code = sessionStorage.getItem('access_token')
-        console.log(JSON.stringify({
-            authentication_code: auth_code,
-            song: songId
-        }))
         const url = 'http://localhost:8000/playlist/'
         fetch(url, {
             method: 'POST',

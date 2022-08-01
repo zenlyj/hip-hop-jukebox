@@ -54,7 +54,7 @@ def search_spotify(query: str, query_type: str, token: str):
     params = {
         'q' : query,
         'type' : query_type,
-        'limit' : 1
+        'limit' : 5
     }
     headers = {
         'Accept' : 'application/json',
@@ -62,7 +62,7 @@ def search_spotify(query: str, query_type: str, token: str):
         'Authorization' : 'Bearer ' + token
     }
     res = requests.get(url, headers=headers, params=params)
-    uri = parser.parseSpotifySearch(res.text)
+    uri = parser.parseSpotifySearch(res.text, query)
     obj = {
         'uri' : uri
     }

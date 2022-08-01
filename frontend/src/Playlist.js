@@ -8,14 +8,8 @@ function Playlist(props) {
     const [songs, setSongs] = useState([])
 
     useEffect(() => {
-        console.log(songs)
         getPlaylistSongs()
     })
-
-    const authenticateSpotify = () => {
-        const url = window.location.search
-        window.location.replace(url + '/spotifyauth')
-    }
 
     const getPlaylistSongs = () => {
         const auth_code = sessionStorage.getItem('access_token')
@@ -25,8 +19,8 @@ function Playlist(props) {
         .then(value => Promise.resolve(value.json())
             .then(playlistSongs => {
                 if (playlistSongs !== undefined && playlistSongs.length !== songs.length) {
-                    console.log(playlistSongs)
                     setSongs(playlistSongs)
+                    props.updatePlaylistURI(playlistSongs.map(song => song.uri))
                 }
             })
         )
@@ -38,7 +32,7 @@ function Playlist(props) {
 
     const listHeader = () => {
         return <ListItem disablePadding>
-            <ListItemButton onClick={() => authenticateSpotify()}>
+            <ListItemButton onClick={() => props.playSongs(true)}>
                 <ListItemText primary='Playlist' secondary='Click to listen on Spotify!' primaryTypographyProps={{color: '#ffffff'}} secondaryTypographyProps={{color: '#a1a1a1ff'}}/>
             </ListItemButton>
         </ListItem>

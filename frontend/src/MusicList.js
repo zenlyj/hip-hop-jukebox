@@ -13,7 +13,7 @@ function MusicList(props) {
 		for (let i = 0; i < songs.length; i++) {
 			const song = songs[i]
 			const listItem = (<ListItem disablePadding key={song.id}>
-								<ListItemButton onClick={() => props.onClickHandler(song.id)}>
+								<ListItemButton onClick={() => props.onClickHandler(song.id, song.uri)}>
 									<ListItemText primary={song.title} secondary={song.artist} primaryTypographyProps={{color: '#ffffff'}} secondaryTypographyProps={{color: '#a1a1a1ff'}}/>
 								</ListItemButton>
 							</ListItem>)

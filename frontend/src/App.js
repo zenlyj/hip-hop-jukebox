@@ -7,8 +7,8 @@ function App(props) {
   return (  
       <div>
             <Routes>
+                <Route path="/" element={<SpotifyAuth />} />
                 <Route path="/home" element={<Home />} />
-                <Route path="/spotifyauth" element={<SpotifyAuth />} />
             </Routes>
       </div>
   )
