@@ -12,10 +12,10 @@ class Parser:
 
     def parseSpotifySearch(self, result, query):
         result = json.loads(result)
+        print(result)
         return self.getBestResult(result['tracks']['items'], query)
 
     def getBestResult(self, result, query):
-        print(result)
         uri = None
         difference = float('inf')
         for i in range(len(result)):
@@ -31,5 +31,7 @@ class Parser:
         for artist in searchResult['artists']:
             match += ' '
             match += artist['name']
+            break
+        print(match, query)
         return jellyfish.levenshtein_distance(match, query)
          
