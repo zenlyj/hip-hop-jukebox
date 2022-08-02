@@ -23,3 +23,10 @@ def add_song_to_playlist(db: Session, playlist: schemas.PlaylistCreate):
     db.commit()
     db.refresh(playlist_song)
     return playlist_song
+
+def remove_song_from_playlist(db: Session, authentication_code: str, song_id: int):
+    numDeleted = db.query(models.Playlist)\
+                    .filter(models.Playlist.song == song_id and models.Playlist.authentication_code == authentication_code)\
+                    .delete()
+    db.commit()
+    return numDeleted

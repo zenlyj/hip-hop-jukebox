@@ -43,7 +43,7 @@ function Home(props) {
                 <Jukebox forceRender={forceRender}/>
             </Grid>
             <Grid item xs={6} sx={{height: '84.5vh'}}>
-                <Playlist playSongs={setIsPlaying} updatePlaylistURI={updatePlaylistURI} />
+                <Playlist playSongs={setIsPlaying} updatePlaylistURI={updatePlaylistURI} forceRender={forceRender} />
             </Grid>
             <Grid item xs={12} sx={{height: '10vh'}}>
                 {   sessionStorage.getItem('access_token') !== null  && isPlaying?

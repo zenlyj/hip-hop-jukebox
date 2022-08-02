@@ -96,3 +96,12 @@ def get_playlist_songs(authentication_code: str, db: Session = Depends(get_db)):
 @app.post("/playlist/", response_model=schemas.Playlist)
 def add_song_to_playlist(playlist: schemas.PlaylistCreate, db: Session = Depends(get_db)):
     return crud.add_song_to_playlist(db, playlist)
+
+@app.delete("/playlist/")
+def remove_song_from_playlist(authentication_code: str, song_id: int, db: Session = Depends(get_db)):
+    numDeleted = crud.remove_song_from_playlist(db, authentication_code, song_id)
+    if numDeleted == 0:
+        raise HTTPException(status_code=400, detail='Failed to delete song')
+    return {
+        'detail': 'Delete Successful'
+    }

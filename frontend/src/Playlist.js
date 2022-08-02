@@ -14,7 +14,7 @@ function Playlist(props) {
     const getPlaylistSongs = () => {
         const auth_code = sessionStorage.getItem('access_token')
         if (auth_code == null) return 
-        const url = 'http://localhost:8000/playlist/?authentication_code='+auth_code
+        const url = `http://localhost:8000/playlist/?authentication_code=${auth_code}`
         Promise.resolve(fetch(url))
         .then(value => Promise.resolve(value.json())
             .then(playlistSongs => {
@@ -27,7 +27,19 @@ function Playlist(props) {
     }
 
     const removePlaylistSong = (songId) => {
-
+        const access_code = sessionStorage.getItem('access_token')
+        if (access_code == null) return
+        const url = `http://localhost:8000/playlist/?authentication_code=${access_code}&song_id=${songId}`
+        fetch(url, {
+            method: 'DELETE',
+        })
+        .then((response) => {
+            if (response.status == 200) {
+                props.forceRender()
+            } else {
+                console.log('Failed to delete')
+            }
+        })
     }
 
     const listHeader = () => {

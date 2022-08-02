@@ -54,7 +54,7 @@ class PrawBot:
             return None
 
     def __get_access_token(self):
-        return 'BQBMznIPFzp3ut7-kt4QfymlbiJrdnTglWiZwxe1Z0iE-t8EhVQaeSd_ZzTkIA5D1eIHXbxs04Iaz3rUyW3wjmnWZ3B3R9BX7qpDUxVKGyKtgaLSnkef1FN7TuBQ_qQPmaVbskvzmLn99YlTjYLxcwdVB3tDohoS0s1eq-ca95PhW2PFpN2jrHXEU4s0W4mrud9DeHrmP1GDMFAYYQACvmeLCrKn0MjOkMI'
+        return 'BQBdMOatBuXuibKZojz8K0T0JuaU5fCo74LgW4n5iEFkcjjbM-giMfc9QIcdhHu5OI8Iyq4wIVOv4g2IVew3eQw9oIRAYCCGAQSglFQn7B-0eNdBlgmn1CFbNpiqSV3FvnnQy3JXKTp-GlaYvQSm9-QzSx4FyZqnge7yrxOqlZZqNvuTwsNTciRduT_iiqqz0QpsMIOmS5bMlr-IOpIcZBiiqmJJi2QSy2A'
 
 bot = PrawBot()
 bot.update()
