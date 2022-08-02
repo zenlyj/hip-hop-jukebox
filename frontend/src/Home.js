@@ -39,13 +39,13 @@ function Home(props) {
             <Grid item xs={12} sx={{height: '8vh'}}>
                 <AppHeader />
             </Grid>
-            <Grid item xs={6} sx={{maxHeight: '86.2vh'}}>
+            <Grid item xs={6} sx={{height: '84.5vh'}}>
                 <Jukebox forceRender={forceRender}/>
             </Grid>
-            <Grid item xs={6} sx={{maxHeight: '86.2vh'}}>
+            <Grid item xs={6} sx={{height: '84.5vh'}}>
                 <Playlist playSongs={setIsPlaying} updatePlaylistURI={updatePlaylistURI} />
             </Grid>
-            <Grid item xs={12} sx={{height: '8vh'}}>
+            <Grid item xs={12} sx={{height: '10vh'}}>
                 {   sessionStorage.getItem('access_token') !== null  && isPlaying?
                         <SpotifyPlayer 
                             token={sessionStorage.getItem('access_token')}

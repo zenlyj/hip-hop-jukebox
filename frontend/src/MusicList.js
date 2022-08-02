@@ -10,6 +10,14 @@ function MusicList(props) {
 		const songs = props.songs
 		let listItems = []
 		listItems.push(props.listHeader)
+
+		if (songs.length === 0) {
+			listItems.push(<ListItem>
+				<ListItemText primary='No Songs Yet...' primaryTypographyProps={{color: '#a1a1a1ff'}} />
+			</ListItem>)
+			return listItems
+		}
+
 		for (let i = 0; i < songs.length; i++) {
 			const song = songs[i]
 			const listItem = (<ListItem disablePadding key={song.id}>
