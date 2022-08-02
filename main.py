@@ -46,10 +46,18 @@ def authorize_spotify(authorization_code: str):
         'code' : authorization_code,
         'redirect_uri' : 'http://localhost:3000/home/'
     }
-    return requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data).text
+    result = requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data)
+    if result.status_code != 200:
+        errorMessage = json.loads(result.text)['error_description']
+        raise HTTPException(status_code=result.status_code, detail=errorMessage)
+    
+    access_token = json.loads(result.text)['access_token']
+    return {
+        'access_token': access_token
+    }
 
 @app.get("/spotify/search/")
-def search_spotify(query: str, query_type: str, token: str):
+def search_spotify(query: str, query_type: str, access_token: str):
     url = 'https://api.spotify.com/v1/search'
     params = {
         'q' : query,
@@ -59,14 +67,18 @@ def search_spotify(query: str, query_type: str, token: str):
     headers = {
         'Accept' : 'application/json',
         'Content-Type' : 'application/json',
-        'Authorization' : 'Bearer ' + token
+        'Authorization' : 'Bearer ' + access_token
     }
-    res = requests.get(url, headers=headers, params=params)
-    uri = parser.parseSpotifySearch(res.text, query)
-    obj = {
+    result = requests.get(url, headers=headers, params=params)
+    if result.status_code != 200:
+        errorMessage = json.loads(result.text)['error']['message']
+        raise HTTPException(status_code=result.status_code, detail=errorMessage)
+    uri = parser.parseSpotifySearch(result.text, query)
+    if uri == None:
+        raise HTTPException(status_code=404, detail='Track not found on Spotify')
+    return {
         'uri' : uri
     }
-    return obj
 
 
 @app.get("/songs/", response_model=List[schemas.Song])

@@ -25,13 +25,13 @@ class PrawBot:
             titles.append(submission.title)
         return titles
 
-    def push(self, song):
+    def __push(self, song):
         split = song.split('-')
         if len(split) != 2: return
         title = split[1]
         artist = split[0]
         uri = self.__get_song_uri(title, artist)
-        print(title, artist)
+        print(uri)
         if (uri == None): return
         payload = {
             "title" : title,
@@ -45,7 +45,7 @@ class PrawBot:
         params = {
             'query': title + ' ' + artist,
             'query_type': 'track',
-            'token': self.__get_access_token()
+            'access_token': self.__get_access_token()
         }
         res = requests.get('http://localhost:8000/spotify/search', params=params)
         if res.status_code == 200:
@@ -54,7 +54,7 @@ class PrawBot:
             return None
 
     def __get_access_token(self):
-        return 'BQDd2umOox5pMsCR_Ghbw1tgUnYyQEBxUZtE1LXx1w0kx_RUR9R75oldYhAvo1uaL4mi8PjZgBMTiK1REDB0IX2sVCRyjACvGHyKjayMZGLZ81bzR7WB0zQi6kQFAKFmP1E_yiF9ubSA_dM-p0npgbRFpMVD8Oc2U22ryDU41nkYWzJF9U6w8hjdrVc3blS-2ONjETrt4dN73mQa--CedzSvbUzYHKo5944'
+        return 'BQBMznIPFzp3ut7-kt4QfymlbiJrdnTglWiZwxe1Z0iE-t8EhVQaeSd_ZzTkIA5D1eIHXbxs04Iaz3rUyW3wjmnWZ3B3R9BX7qpDUxVKGyKtgaLSnkef1FN7TuBQ_qQPmaVbskvzmLn99YlTjYLxcwdVB3tDohoS0s1eq-ca95PhW2PFpN2jrHXEU4s0W4mrud9DeHrmP1GDMFAYYQACvmeLCrKn0MjOkMI'
 
 bot = PrawBot()
-bot.push('Kur-Seasons')
+bot.update()

@@ -11,16 +11,14 @@ function Home(props) {
     const [val, setVal] = useState(0)
 
     useEffect(() => {
-        console.log(playlistURI)
         const windowURL = window.location.search
         const params = new URLSearchParams(windowURL)
         const authCode = params.get('code')
-        console.log(sessionStorage.getItem('access_token'))
         if (sessionStorage.getItem('access_token') === null && authCode !== null) {
             Promise.resolve(fetch('http://localhost:8000/spotify/authorize?authorization_code='+authCode))
             .then(value => Promise.resolve(value.json())
                 .then(value => {
-                    const access_token = JSON.parse(value).access_token
+                    const access_token = value.access_token
                     console.log(access_token)
                     sessionStorage.setItem('access_token', access_token)
                 })
